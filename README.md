@@ -51,10 +51,10 @@
 
 При наличии Anaconda, можно быстро установить окружение командой:
 
-> cd captcha
-
-> conda create --name tf_test --file create_env_tf.txt
-
+```console
+cd captcha
+conda create --name tf_test --file create_env_tf.txt
+```
 Ручная установка пакетов:
 - conda create -n tf tensorflow
 - conda activate tf
