@@ -1,5 +1,7 @@
-import requests
+# USAGE
+# python server.py
 
+import requests
 
 def response_from_server(url, image_file, verbose=True):
     """Makes a POST request to the server and returns the response.

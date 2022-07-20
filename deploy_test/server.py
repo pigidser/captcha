@@ -62,9 +62,6 @@ def prediction(file: UploadFile = File(...)):
 	if not (image.shape[0] == 160 and image.shape[1] == 520):
 		raise HTTPException(status_code=416, detail="Image shape shoud be 520x160.")
 
-	# gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
-	# output = cv2.merge([gray] * 3)
 	predictions = []
 
 	# Our image size is 520x160 and it is consisted of 4 symbols
