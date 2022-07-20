@@ -56,16 +56,17 @@ cd captcha
 conda create --name tf_test --file create_env_tf.txt
 ```
 Ручная установка пакетов:
-- conda create -n tf tensorflow
-- conda activate tf
-- conda install -c conda-forge opencv
-- conda install -c conda-forge imutils
-- conda install -c anaconda scikit-learn
-- conda install -c conda-forge uvicorn
-- conda install -c conda-forge fastapi
-- conda install -c conda-forge nest-asyncio
-- conda install -c conda-forge python-multipart
-
+```console
+conda create -n tf tensorflow
+conda activate tf
+conda install -c conda-forge opencv
+conda install -c conda-forge imutils
+conda install -c anaconda scikit-learn
+conda install -c conda-forge uvicorn
+conda install -c conda-forge fastapi
+conda install -c conda-forge nest-asyncio
+conda install -c conda-forge python-multipart
+```
 
 ## Предварительный набор данных
 
@@ -73,9 +74,9 @@ conda create --name tf_test --file create_env_tf.txt
 
 1. В папке **input** находятся каптчи, на которых присутствуют все необходимые символы.
 2. Запустить скрипт **divide_by_elements.py**, для вытаскивания отдельных символов из картинок. В результате работы скрипта будет создана папка **dataset** с отдельными картинками.
-
-> python divide_by_elements.py --input input --dataset dataset1
-
+```console
+python divide_by_elements.py --input input --dataset dataset1
+```
 3. Для каждого уникального символа создать папку с соответствующим названием (например, для цифры "2" создать папку с именем "2", для строчной "y" создать папку "yy", а для прописной - папку "Y"). Поместить в папку только один соответствующий символ, по возможности выбирать картинку, где символ не пересекает линия.
 4. В редакторе картинок убрать с каждой картинки пересекающую линию.
 5. В результате имеем папку **dataset**, в которой для каждого класса создана папка с соответствующим именем с помещенным в ней одной картинкой символа, с вручную удаленной линией.
@@ -84,15 +85,17 @@ conda create --name tf_test --file create_env_tf.txt
 ## Увеличение набора данных
 
 Предварительный набор данных **dataset** содержит всего по одной картинке каждого класса. Чтобы обучать модель, набор данных нужно раскопировать на большее количество экземпляров класса. Используем скрипт **copy_images.py**.
-
-> python copy_images.py --dataset dataset1 --copies 999
+```console
+python copy_images.py --dataset dataset1 --copies 999
+```
 
 
 ## Тренировка модели (локально)
 
 Для тренировки модели предназначен скрипт **train_model_aug.py**. Часть параметров вынесено в конфиг **pyimagesearch/config.py**, а часть передается в виде параметров командной строки.
-
-> python train_model_aug.py --dataset dataset1 --model output/minivggnet.hdf5 --epochs 50 --schedule standard
+```console
+python train_model_aug.py --dataset dataset1 --model output/minivggnet.hdf5 --epochs 50 --schedule standard
+```
 
 Обучение модели с 20 экземплярами каждого класса занимает несколько минут. Для обучения стабильной модели использовать GPU на Google Colab, обучать на 1000 экземпляров каждого класса (займет несклько минут).
 
@@ -100,8 +103,9 @@ conda create --name tf_test --file create_env_tf.txt
 ## Тестирование модели
 
 Запустить скрипт **test_model.py**, передав папку с каптчами, файл с моделью и количество каптч для теста:
-
-> python test_model.py --input input --model output/minivggnet.hdf5 --size 10
+```console
+python test_model.py --input input --model output/minivggnet.hdf5 --size 10
+```
 
 
 ## Определить фильтр для фонового цвета
@@ -109,8 +113,9 @@ conda create --name tf_test --file create_env_tf.txt
 Скрипт **pyimagesearch/config.py** содержит параметры BACKGROUND_COLOR_H1 и BACKGROUND_COLOR_H2 которые передаются в функцию **hsv_filter.py** для обработки изображения. В случае, если фон картинки каптчи будет изменен, необходимо будет подобрать новые значения фильтра для обнаружения фонового цвета.
 
 1. Запустить скрипт **detect_background_color.py**
-
-> python detect_background_color.py
+```console
+python detect_background_color.py
+```
 
 2. Откроектся окно **settings** с ползунками настройки, окно **color** с оригинальным цветным изображением и изображением фоном, замененным на черный цвет и окно **gray** с результирующей картинкой. Такую-же, только уменьшенную картинку видит нейросеть.
 
