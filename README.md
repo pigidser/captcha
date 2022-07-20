@@ -5,9 +5,11 @@
 
 # Состав проекта:
 
-- [Captcha Colab Notebook.ipynb] - тренировка модели в Колабе
+- **Captcha Colab Notebook.ipynb** - тренировка модели в Колабе
 
-- [dataset] - предварительный набор данных, который требуется увеличить перед тренировкой модели
+- [create_env_tf.txt] - файл для создания окружения с необходимыми библиотеками
+
+- [dataset] - предварительный набор данных, который нужно обязательно увеличить (см. следующий)
 - [copy_images.py] - автоматизация увеличения предварительного набора данных
 - [pyimagesearch/config.py] - настройки для обучения модели
 - [train_model_aug.py] - тренировка модели
@@ -49,15 +51,21 @@
 
 # Установка необходимых библиотек
 
-conda create -n tf tensorflow
-conda activate tf
-conda install -c conda-forge opencv
-conda install -c conda-forge imutils
-conda install -c anaconda scikit-learn
-conda install -c conda-forge uvicorn
-conda install -c conda-forge fastapi
-conda install -c conda-forge nest-asyncio
-conda install -c conda-forge python-multipart
+При наличии Anaconda, можно быстро установить окружение командой:
+
+> cd captcha
+> conda create --name tf_test --file create_env_tf.txt
+
+Ручная установка пакетов:
+- conda create -n tf tensorflow
+- conda activate tf
+- conda install -c conda-forge opencv
+- conda install -c conda-forge imutils
+- conda install -c anaconda scikit-learn
+- conda install -c conda-forge uvicorn
+- conda install -c conda-forge fastapi
+- conda install -c conda-forge nest-asyncio
+- conda install -c conda-forge python-multipart
 
 
 # Предварительный набор данных
