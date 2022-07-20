@@ -1,17 +1,17 @@
 # USAGE
-# python test_model.py --input downloads --model output/lenet.hdf5
-# python test_model.py --input downloads --model output/minivggnet_200_std.hdf5
+# python test_model.py --input input --model output/minivggnet_1000_std.hdf5 --size 10
 
 # import the necessary packages
 from tensorflow.keras.preprocessing.image import img_to_array
 from tensorflow.keras.models import load_model
-from pyimagesearch.utils.captchahelper import hsv_filter, preprocess
+from pyimagesearch.utils import hsv_filter, preprocess
 from imutils import contours
 from imutils import paths
 import numpy as np
 import argparse
 import imutils
 import cv2
+from pyimagesearch import config
 
 class_labels = ['2','3','4','5','6','7','8','9','A','B','C','D','E','F','G','H','J','K',
 				'L','M','N','P','Q','R','S','T','U','V','W','X','Y','Z','a','b','c',
@@ -24,6 +24,8 @@ ap.add_argument("-i", "--input", required=True,
 	help="path to input directory of images")
 ap.add_argument("-m", "--model", required=True,
 	help="path to input model")
+ap.add_argument("-s", "--size", required=True, type=int,
+	help="# images to test")
 args = vars(ap.parse_args())
 
 # load the pre-trained network
@@ -32,8 +34,8 @@ model = load_model(args["model"])
 
 # randomy sample a few of the input images
 imagePaths = list(paths.list_images(args["input"]))
-# imagePaths = np.random.choice(imagePaths, size=(10,),
-# 	replace=False)
+imagePaths = np.random.choice(imagePaths, size=(args["size"],),
+	replace=False)
 
 cv2.namedWindow( "result" ) # создаем главное окно
 
@@ -48,9 +50,7 @@ for imagePath in imagePaths:
 	assert image.shape[1] == 520
 
 	gray = cv2.cvtColor(image, cv2.COLOR_BGR2GRAY)
-
 	output = cv2.merge([gray] * 3)
-	predictions = []
 
 	part = gray.shape[1] // 4
 	startY = 20
@@ -58,12 +58,14 @@ for imagePath in imagePaths:
 	w = 130
 	h = 130
 
+	predictions = []
+
 	for i in range(4):
 		startX = part * i
 		endX = startX + part
 		roi = image[startY:endY, startX:endX]
 
-		roi = hsv_filter(roi)
+		roi = hsv_filter(roi, config.BACKGROUND_COLOR_H1, config.BACKGROUND_COLOR_H2)
 		# cv2.imshow('result', roi)
 		# cv2.waitKey()
 
@@ -80,46 +82,7 @@ for imagePath in imagePaths:
 			cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
 
 
-	# gray = cv2.copyMakeBorder(gray, 20, 20, 20, 20,
-	# 	cv2.BORDER_REPLICATE)
-
-	# # threshold the image to reveal the digits
-	# thresh = cv2.threshold(gray, 0, 255,
-	# 	cv2.THRESH_BINARY_INV | cv2.THRESH_OTSU)[1]
-
-	# # find contours in the image, keeping only the four largest ones,
-	# # then sort them from left-to-right
-	# cnts = cv2.findContours(thresh.copy(), cv2.RETR_EXTERNAL,
-	# 	cv2.CHAIN_APPROX_SIMPLE)
-	# cnts = imutils.grab_contours(cnts)
-	# cnts = sorted(cnts, key=cv2.contourArea, reverse=True)[:4]
-	# cnts = contours.sort_contours(cnts)[0]
-
-	# # initialize the output image as a "grayscale" image with 3
-	# # channels along with the output predictions
-	# output = cv2.merge([gray] * 3)
-	# predictions = []
-
-	# # loop over the contours
-	# for c in cnts:
-	# 	# compute the bounding box for the contour then extract the
-	# 	# digit
-	# 	(x, y, w, h) = cv2.boundingRect(c)
-	# 	roi = gray[y - 5:y + h + 5, x - 5:x + w + 5]
-
-	# 	# pre-process the ROI and classify it then classify it
-	# 	roi = preprocess(roi, 28, 28)
-	# 	roi = np.expand_dims(img_to_array(roi), axis=0) / 255.0
-	# 	pred = model.predict(roi).argmax(axis=1)[0] + 1
-	# 	predictions.append(str(pred))
-
-	# 	# draw the prediction on the output image
-	# 	cv2.rectangle(output, (x - 2, y - 2),
-	# 		(x + w + 4, y + h + 4), (0, 255, 0), 1)
-	# 	cv2.putText(output, str(pred), (x - 5, y - 5),
-	# 		cv2.FONT_HERSHEY_SIMPLEX, 0.55, (0, 255, 0), 2)
-
 	# show the output image
-	print("[INFO] captcha: {}".format(" ".join(predictions)))
+	print("[INFO] captcha: {}".format("".join(predictions)))
 	cv2.imshow("result", output)
 	cv2.waitKey()

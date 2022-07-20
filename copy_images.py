@@ -1,8 +1,22 @@
+# USAGE
+# python copy_images.py --dataset dataset1 --copies 19
+
+# import the necessary packages
 import os
+import argparse
 import shutil
 
-imageDir = "dataset"
-number_copies = 999
+# construct the argument parse and parse the arguments
+ap = argparse.ArgumentParser()
+ap.add_argument("-d", "--dataset", required=True,
+	help="path to dataset")
+ap.add_argument("-n", "--copies", required=True,
+	help="number of copies to create")
+
+args = vars(ap.parse_args())
+
+imageDir = args["dataset"]
+number_copies = int(args["copies"])
 
 for dir in os.listdir(imageDir):
     if not os.path.isdir(os.path.join(imageDir,dir)):
@@ -14,22 +28,9 @@ for dir in os.listdir(imageDir):
         continue
     dup = number_copies // len(files)
     for i, file in enumerate(files):
-        print(file)
         new_file = os.path.splitext(file)[0]
         for j in range(dup):
             shutil.copy(
                 os.path.join(imageDir, dir, file),
                 os.path.join(imageDir, dir, new_file + "_" + str(j) + ".png"))
         
-# walk = os.walk(imageDir)
-
-
-# for root, dirs, files in os.walk(imageDir, topdown=False):
-#     for dir in dirs:
-#         print(f"-----------{dir}")
-#         files = os.listdir(dir)
-#         print(files)
-    # if len(files) == 0:
-    #     print("Folder")
-    #     continue
-    #     num_left = number_copies - len(files)
