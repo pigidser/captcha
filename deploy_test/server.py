@@ -1,3 +1,6 @@
+# USAGE
+# python server.py
+
 import os
 import io
 from fastapi import FastAPI, UploadFile, File, HTTPException
